@@ -1,0 +1,54 @@
+:root {
+    --c2c-green: #146c43;
+    --c2c-sand: #fff8e8;
+}
+
+body {
+    background: #f7f7f2;
+}
+
+.navbar {
+    background: var(--c2c-green);
+}
+
+.hero {
+    background: linear-gradient(135deg, #0f5132, #198754);
+    color: #fff;
+    border-radius: 1rem;
+}
+
+.product-img {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--c2c-sand);
+}
+
+.placeholder-img {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    background: var(--c2c-sand);
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.price {
+    color: var(--c2c-green);
+    font-weight: 700;
+}
+
+.card {
+    border: 0;
+    box-shadow: 0 0.35rem 1rem rgba(0, 0, 0, 0.05);
+}
+
+.table-responsive {
+    background: #fff;
+    border-radius: 0.75rem;
+}
+
+@media (max-width: 576px) {
+    .hero {
+        border-radius: 0;
+    }
+}
