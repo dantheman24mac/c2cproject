@@ -83,7 +83,9 @@ function layout_header(string $title): void
         </div>
     </nav>
     <main class="container py-4">
-        <?php if ($flash): ?><div class="alert alert-info"><?= e($flash) ?></div><?php endif; ?>
+        <?php if ($flash): ?>
+            <div class="alert alert-info"><?= e($flash) ?></div>
+        <?php endif; ?>
     <?php
 }
 
@@ -210,16 +212,39 @@ function page_home(): void
                     <label class="form-label" for="q">Search marketplace</label>
                     <input class="form-control mb-2" id="q" name="q" value="<?= e($q) ?>" placeholder="Search products">
                     <div class="row g-2">
-                        <div class="col-sm-6"><select class="form-select" name="category"><option value="0">All categories</option><?php foreach (categories() as $cat): ?><option value="<?= (int) $cat['id'] ?>" <?= selected((string) $category, (string) $cat['id']) ?>><?= e($cat['name']) ?></option><?php endforeach; ?></select></div>
-                        <div class="col-sm-6"><select class="form-select" name="sort"><option value="newest" <?= selected($sort, 'newest') ?>>Newest</option><option value="price_asc" <?= selected($sort, 'price_asc') ?>>Price Low-High</option><option value="price_desc" <?= selected($sort, 'price_desc') ?>>Price High-Low</option></select></div>
+                        <div class="col-sm-6">
+                            <select class="form-select" name="category">
+                                <option value="0">All categories</option>
+                                <?php foreach (categories() as $cat): ?>
+                                    <option value="<?= (int) $cat['id'] ?>" <?= selected((string) $category, (string) $cat['id']) ?>>
+                                        <?= e($cat['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <select class="form-select" name="sort">
+                                <option value="newest" <?= selected($sort, 'newest') ?>>Newest</option>
+                                <option value="price_asc" <?= selected($sort, 'price_asc') ?>>Price Low-High</option>
+                                <option value="price_desc" <?= selected($sort, 'price_desc') ?>>Price High-Low</option>
+                            </select>
+                        </div>
                     </div>
                     <button class="btn btn-success mt-3">Search</button>
                 </form>
             </div>
         </div>
     </section>
-    <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h4 mb-0">Latest products</h2><span class="text-muted small"><?= count($products) ?> result(s)</span></div>
-    <div class="row g-3"><?php foreach ($products as $product) product_card($product); ?><?php if (!$products): ?><p class="text-muted">No products found.</p><?php endif; ?></div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 mb-0">Latest products</h2>
+        <span class="text-muted small"><?= count($products) ?> result(s)</span>
+    </div>
+    <div class="row g-3">
+        <?php foreach ($products as $product) product_card($product); ?>
+        <?php if (!$products): ?>
+            <p class="text-muted">No products found.</p>
+        <?php endif; ?>
+    </div>
     <?php
     layout_footer();
 
@@ -243,7 +268,35 @@ function page_register(): void
 
     layout_header('Register');
     ?>
-    <div class="row justify-content-center"><div class="col-md-7 col-lg-5"><div class="card card-body"><h1 class="h4 mb-3">Create account</h1><form method="post"><?= csrf_field() ?><label class="form-label">Full name</label><input class="form-control mb-2" name="full_name" required><label class="form-label">Email</label><input class="form-control mb-2" type="email" name="email" required><label class="form-label">Password</label><input class="form-control mb-2" type="password" name="password" minlength="8" required><label class="form-label">Role</label><select class="form-select mb-2" name="role"><option value="buyer">Buyer</option><option value="seller">Seller</option></select><label class="form-label">Province</label><select class="form-select mb-3" name="province"><option value="">Select province</option><?php foreach (PROVINCES as $province): ?><option><?= e($province) ?></option><?php endforeach; ?></select><button class="btn btn-success w-100">Register</button></form></div></div></div>
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+            <div class="card card-body">
+                <h1 class="h4 mb-3">Create account</h1>
+                <form method="post">
+                    <?= csrf_field() ?>
+                    <label class="form-label">Full name</label>
+                    <input class="form-control mb-2" name="full_name" required>
+                    <label class="form-label">Email</label>
+                    <input class="form-control mb-2" type="email" name="email" required>
+                    <label class="form-label">Password</label>
+                    <input class="form-control mb-2" type="password" name="password" minlength="8" required>
+                    <label class="form-label">Role</label>
+                    <select class="form-select mb-2" name="role">
+                        <option value="buyer">Buyer</option>
+                        <option value="seller">Seller</option>
+                    </select>
+                    <label class="form-label">Province</label>
+                    <select class="form-select mb-3" name="province">
+                        <option value="">Select province</option>
+                        <?php foreach (PROVINCES as $province): ?>
+                            <option><?= e($province) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <button class="btn btn-success w-100">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
     <?php
     layout_footer();
 
@@ -269,7 +322,21 @@ function page_login(): void
 
     layout_header('Login');
     ?>
-    <div class="row justify-content-center"><div class="col-md-6 col-lg-4"><div class="card card-body"><h1 class="h4 mb-3">Login</h1><form method="post"><?= csrf_field() ?><label class="form-label">Email</label><input class="form-control mb-2" type="email" name="email" required><label class="form-label">Password</label><input class="form-control mb-3" type="password" name="password" required><button class="btn btn-success w-100">Login</button></form></div></div></div>
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-body">
+                <h1 class="h4 mb-3">Login</h1>
+                <form method="post">
+                    <?= csrf_field() ?>
+                    <label class="form-label">Email</label>
+                    <input class="form-control mb-2" type="email" name="email" required>
+                    <label class="form-label">Password</label>
+                    <input class="form-control mb-3" type="password" name="password" required>
+                    <button class="btn btn-success w-100">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
     <?php
     layout_footer();
 
@@ -300,7 +367,47 @@ function page_profile(): void
 
     layout_header('Profile');
     ?>
-    <div class="card card-body"><h1 class="h4 mb-3">Profile</h1><form method="post" class="row g-3"><?= csrf_field() ?><div class="col-md-6"><label class="form-label">Full name</label><input class="form-control" name="full_name" value="<?= e($user['full_name']) ?>" required></div><div class="col-md-6"><label class="form-label">Email</label><input class="form-control" value="<?= e($user['email']) ?>" disabled></div><div class="col-md-6"><label class="form-label">Phone</label><input class="form-control" name="phone" value="<?= e($user['phone']) ?>"></div><div class="col-md-6"><label class="form-label">City</label><input class="form-control" name="city" value="<?= e($user['city']) ?>"></div><div class="col-12"><label class="form-label">Shipping address</label><textarea class="form-control" name="address" rows="3"><?= e($user['address']) ?></textarea></div><div class="col-md-6"><label class="form-label">Province</label><select class="form-select" name="province"><?php foreach (PROVINCES as $province): ?><option <?= selected((string) $user['province'], $province) ?>><?= e($province) ?></option><?php endforeach; ?></select></div><div class="col-md-6"><label class="form-label">Postal code</label><input class="form-control" name="postal_code" value="<?= e($user['postal_code']) ?>"></div><div class="col-12"><button class="btn btn-success">Save profile</button></div></form></div>
+    <div class="card card-body">
+        <h1 class="h4 mb-3">Profile</h1>
+        <form method="post" class="row g-3">
+            <?= csrf_field() ?>
+            <div class="col-md-6">
+                <label class="form-label">Full name</label>
+                <input class="form-control" name="full_name" value="<?= e($user['full_name']) ?>" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input class="form-control" value="<?= e($user['email']) ?>" disabled>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Phone</label>
+                <input class="form-control" name="phone" value="<?= e($user['phone']) ?>">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">City</label>
+                <input class="form-control" name="city" value="<?= e($user['city']) ?>">
+            </div>
+            <div class="col-12">
+                <label class="form-label">Shipping address</label>
+                <textarea class="form-control" name="address" rows="3"><?= e($user['address']) ?></textarea>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Province</label>
+                <select class="form-select" name="province">
+                    <?php foreach (PROVINCES as $province): ?>
+                        <option <?= selected((string) $user['province'], $province) ?>><?= e($province) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Postal code</label>
+                <input class="form-control" name="postal_code" value="<?= e($user['postal_code']) ?>">
+            </div>
+            <div class="col-12">
+                <button class="btn btn-success">Save profile</button>
+            </div>
+        </form>
+    </div>
     <?php
     layout_footer();
 
@@ -376,7 +483,11 @@ function page_product(): void
     layout_header($product['title']);
     ?>
     <div class="row g-4">
-        <div class="col-lg-6"><div class="card"><?= product_image($product['image_path'], $product['title']) ?></div></div>
+        <div class="col-lg-6">
+            <div class="card">
+                <?= product_image($product['image_path'], $product['title']) ?>
+            </div>
+        </div>
         <div class="col-lg-6">
             <div class="card card-body">
                 <div class="text-muted mb-1"><?= e($product['category_name']) ?></div>
@@ -387,17 +498,56 @@ function page_product(): void
                 <p class="mb-3"><strong>Rating:</strong> <?= number_format((float) $product['avg_rating'], 1) ?>/5 from <?= (int) $product['review_count'] ?> review(s)</p>
                 <p><?= nl2br(e($product['description'])) ?></p>
                 <form method="post" class="d-flex gap-2 mb-2">
-                    <?= csrf_field() ?><input type="hidden" name="action" value="cart">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="cart">
                     <input class="form-control" type="number" name="quantity" min="1" max="<?= (int) $product['stock_quantity'] ?>" value="1" style="max-width: 110px">
                     <button class="btn btn-success" <?= (int) $product['stock_quantity'] < 1 ? 'disabled' : '' ?>>Add to cart</button>
                 </form>
-                <form method="post"><?= csrf_field() ?><input type="hidden" name="action" value="wishlist"><button class="btn btn-outline-success btn-sm">Toggle wishlist</button></form>
+                <form method="post">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="wishlist">
+                    <button class="btn btn-outline-success btn-sm">Toggle wishlist</button>
+                </form>
             </div>
         </div>
     </div>
     <div class="row g-4 mt-1">
-        <div class="col-lg-7"><div class="card card-body"><h2 class="h5">Reviews</h2><?php foreach ($reviews as $review): ?><div class="border-top py-3"><strong><?= (int) $review['rating'] ?>/5</strong> by <?= e($review['full_name']) ?><p class="mb-0"><?= nl2br(e($review['review_text'])) ?></p></div><?php endforeach; ?><?php if (!$reviews): ?><p class="text-muted mb-0">No reviews yet.</p><?php endif; ?></div></div>
-        <div class="col-lg-5"><div class="card card-body"><h2 class="h5">Leave a review</h2><?php if ($canReview): ?><form method="post"><?= csrf_field() ?><input type="hidden" name="action" value="review"><label class="form-label">Rating</label><select class="form-select mb-2" name="rating"><?php for ($i = 5; $i >= 1; $i--): ?><option value="<?= $i ?>"><?= $i ?> star(s)</option><?php endfor; ?></select><label class="form-label">Review</label><textarea class="form-control mb-3" name="review_text" required></textarea><button class="btn btn-success">Submit review</button></form><?php else: ?><p class="text-muted mb-0">Purchase this product before reviewing it.</p><?php endif; ?></div></div>
+        <div class="col-lg-7">
+            <div class="card card-body">
+                <h2 class="h5">Reviews</h2>
+                <?php foreach ($reviews as $review): ?>
+                    <div class="border-top py-3">
+                        <strong><?= (int) $review['rating'] ?>/5</strong> by <?= e($review['full_name']) ?>
+                        <p class="mb-0"><?= nl2br(e($review['review_text'])) ?></p>
+                    </div>
+                <?php endforeach; ?>
+                <?php if (!$reviews): ?>
+                    <p class="text-muted mb-0">No reviews yet.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card card-body">
+                <h2 class="h5">Leave a review</h2>
+                <?php if ($canReview): ?>
+                    <form method="post">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="action" value="review">
+                        <label class="form-label">Rating</label>
+                        <select class="form-select mb-2" name="rating">
+                            <?php for ($i = 5; $i >= 1; $i--): ?>
+                                <option value="<?= $i ?>"><?= $i ?> star(s)</option>
+                            <?php endfor; ?>
+                        </select>
+                        <label class="form-label">Review</label>
+                        <textarea class="form-control mb-3" name="review_text" required></textarea>
+                        <button class="btn btn-success">Submit review</button>
+                    </form>
+                <?php else: ?>
+                    <p class="text-muted mb-0">Purchase this product before reviewing it.</p>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
     <?php
     layout_footer();
@@ -445,7 +595,46 @@ function page_cart(): void
     layout_header('Cart');
     ?>
     <h1 class="h4 mb-3">Shopping cart</h1>
-    <form method="post" class="card card-body"><?= csrf_field() ?><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead><tbody><?php foreach ($items as $item): ?><tr><td><?= e($item['title']) ?><div class="small text-muted">Seller: <?= e($item['seller_name']) ?></div></td><td><?= money($item['price']) ?></td><td><input class="form-control" type="number" name="qty[<?= (int) $item['id'] ?>]" value="<?= (int) $item['cart_quantity'] ?>" min="0" max="<?= (int) $item['stock_quantity'] ?>" style="max-width: 100px"></td><td><?= money((float) $item['price'] * (int) $item['cart_quantity']) ?></td></tr><?php endforeach; ?></tbody></table></div><?php if (!$items): ?><p class="text-muted">Your cart is empty.</p><?php endif; ?><div class="d-flex justify-content-between align-items-center"><strong>Total: <?= money($total) ?></strong><div><button class="btn btn-outline-secondary">Update cart</button><?php if ($items): ?><a class="btn btn-success" href="index.php?route=checkout">Checkout</a><?php endif; ?></div></div></form>
+    <form method="post" class="card card-body">
+        <?= csrf_field() ?>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($items as $item): ?>
+                        <tr>
+                            <td>
+                                <?= e($item['title']) ?>
+                                <div class="small text-muted">Seller: <?= e($item['seller_name']) ?></div>
+                            </td>
+                            <td><?= money($item['price']) ?></td>
+                            <td><input class="form-control" type="number" name="qty[<?= (int) $item['id'] ?>]" value="<?= (int) $item['cart_quantity'] ?>" min="0" max="<?= (int) $item['stock_quantity'] ?>" style="max-width: 100px"></td>
+                            <td><?= money((float) $item['price'] * (int) $item['cart_quantity']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php if (!$items): ?>
+            <p class="text-muted">Your cart is empty.</p>
+        <?php endif; ?>
+        <div class="d-flex justify-content-between align-items-center">
+            <strong>Total: <?= money($total) ?></strong>
+            <div>
+                <button class="btn btn-outline-secondary">Update cart</button>
+                <?php if ($items): ?>
+                    <a class="btn btn-success" href="index.php?route=checkout">Checkout</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </form>
     <?php
     layout_footer();
 }
@@ -500,7 +689,39 @@ function page_checkout(): void
     $total = array_reduce($items, fn($sum, $item) => $sum + ((float) $item['price'] * (int) $item['cart_quantity']), 0.0);
     layout_header('Checkout');
     ?>
-    <div class="row g-4"><div class="col-lg-7"><div class="card card-body"><h1 class="h4">Checkout</h1><form method="post"><?= csrf_field() ?><label class="form-label">Payment method</label><select class="form-select mb-3" name="payment_method"><option>EFT</option><option>Cash on Collection</option></select><label class="form-label">Delivery address</label><textarea class="form-control mb-3" name="delivery_address" rows="5" required><?= e($defaultAddress) ?></textarea><button class="btn btn-success">Place order</button></form></div></div><div class="col-lg-5"><div class="card card-body"><h2 class="h5">Order summary</h2><?php foreach ($items as $item): ?><div class="d-flex justify-content-between border-top py-2"><span><?= e($item['title']) ?> x <?= (int) $item['cart_quantity'] ?></span><strong><?= money((float) $item['price'] * (int) $item['cart_quantity']) ?></strong></div><?php endforeach; ?><div class="d-flex justify-content-between fs-5 border-top pt-3"><strong>Total</strong><strong><?= money($total) ?></strong></div></div></div></div>
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card card-body">
+                <h1 class="h4">Checkout</h1>
+                <form method="post">
+                    <?= csrf_field() ?>
+                    <label class="form-label">Payment method</label>
+                    <select class="form-select mb-3" name="payment_method">
+                        <option>EFT</option>
+                        <option>Cash on Collection</option>
+                    </select>
+                    <label class="form-label">Delivery address</label>
+                    <textarea class="form-control mb-3" name="delivery_address" rows="5" required><?= e($defaultAddress) ?></textarea>
+                    <button class="btn btn-success">Place order</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card card-body">
+                <h2 class="h5">Order summary</h2>
+                <?php foreach ($items as $item): ?>
+                    <div class="d-flex justify-content-between border-top py-2">
+                        <span><?= e($item['title']) ?> x <?= (int) $item['cart_quantity'] ?></span>
+                        <strong><?= money((float) $item['price'] * (int) $item['cart_quantity']) ?></strong>
+                    </div>
+                <?php endforeach; ?>
+                <div class="d-flex justify-content-between fs-5 border-top pt-3">
+                    <strong>Total</strong>
+                    <strong><?= money($total) ?></strong>
+                </div>
+            </div>
+        </div>
+    </div>
     <?php
     layout_footer();
 }
@@ -512,17 +733,45 @@ function page_orders(): void
     $stmt->execute([$user['id']]);
     $orders = $stmt->fetchAll();
     layout_header('My orders');
-    echo '<h1 class="h4 mb-3">My orders</h1>';
+    ?>
+    <h1 class="h4 mb-3">My orders</h1>
+    <?php
     foreach ($orders as $order) {
         $stmt = db()->prepare('SELECT * FROM order_items WHERE order_id = ?');
         $stmt->execute([$order['id']]);
-        echo '<div class="card card-body mb-3"><div class="d-flex justify-content-between"><h2 class="h5">' . e($order['order_number']) . '</h2><span class="badge bg-secondary">' . e($order['status']) . '</span></div><p class="mb-1">Payment: ' . e($order['payment_method']) . '</p><p class="mb-1">Delivery: ' . nl2br(e($order['delivery_address'])) . '</p><p><strong>Total: ' . money($order['total_amount']) . '</strong></p><div class="table-responsive"><table class="table"><tr><th>Item</th><th>Qty</th><th>Status</th></tr>';
-        foreach ($stmt->fetchAll() as $item) {
-            echo '<tr><td>' . e($item['title_snapshot']) . '</td><td>' . (int) $item['quantity'] . '</td><td>' . e($item['fulfillment_status']) . '</td></tr>';
-        }
-        echo '</table></div></div>';
+        ?>
+        <div class="card card-body mb-3">
+            <div class="d-flex justify-content-between">
+                <h2 class="h5"><?= e($order['order_number']) ?></h2>
+                <span class="badge bg-secondary"><?= e($order['status']) ?></span>
+            </div>
+            <p class="mb-1">Payment: <?= e($order['payment_method']) ?></p>
+            <p class="mb-1">Delivery: <?= nl2br(e($order['delivery_address'])) ?></p>
+            <p><strong>Total: <?= money($order['total_amount']) ?></strong></p>
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Status</th>
+                    </tr>
+                    <?php foreach ($stmt->fetchAll() as $item): ?>
+                        <tr>
+                            <td><?= e($item['title_snapshot']) ?></td>
+                            <td><?= (int) $item['quantity'] ?></td>
+                            <td><?= e($item['fulfillment_status']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        </div>
+        <?php
     }
-    if (!$orders) echo '<p class="text-muted">No orders yet.</p>';
+    if (!$orders) {
+        ?>
+        <p class="text-muted">No orders yet.</p>
+        <?php
+    }
     layout_footer();
 }
 
@@ -533,10 +782,19 @@ function page_wishlist(): void
     $stmt->execute([$user['id']]);
     $products = $stmt->fetchAll();
     layout_header('Wishlist');
-    echo '<h1 class="h4 mb-3">Wishlist</h1><div class="row g-3">';
+    ?>
+    <h1 class="h4 mb-3">Wishlist</h1>
+    <div class="row g-3">
+    <?php
     foreach ($products as $product) product_card($product);
-    echo '</div>';
-    if (!$products) echo '<p class="text-muted">Your wishlist is empty.</p>';
+    ?>
+    </div>
+    <?php
+    if (!$products) {
+        ?>
+        <p class="text-muted">Your wishlist is empty.</p>
+        <?php
+    }
     layout_footer();
 }
 
@@ -568,9 +826,50 @@ function page_seller_dashboard(): void
 
     layout_header('Seller dashboard');
     ?>
-    <div class="d-flex justify-content-between align-items-center mb-3"><h1 class="h4 mb-0">Seller dashboard</h1><div><a class="btn btn-outline-success" href="index.php?route=seller_orders">Orders</a> <a class="btn btn-success" href="index.php?route=seller_product">Add product</a></div></div>
-    <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead><tbody><?php foreach ($products as $product): ?><tr><td><?= e($product['title']) ?></td><td><?= e($product['category_name']) ?></td><td><?= money($product['price']) ?></td><td><?= (int) $product['stock_quantity'] ?></td><td><?= $product['is_active'] ? 'Active' : 'Inactive' ?></td><td class="text-end"><a class="btn btn-sm btn-outline-primary" href="index.php?route=seller_product&id=<?= (int) $product['id'] ?>">Edit</a><form class="d-inline" method="post"><?= csrf_field() ?><input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>"><button class="btn btn-sm btn-outline-secondary" name="action" value="toggle">Toggle</button><button class="btn btn-sm btn-outline-danger" name="action" value="delete" onclick="return confirm('Delete this listing?')">Delete</button></form></td></tr><?php endforeach; ?></tbody></table></div>
-    <?php if (!$products): ?><p class="text-muted">No listings yet.</p><?php endif; ?>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Seller dashboard</h1>
+        <div>
+            <a class="btn btn-outline-success" href="index.php?route=seller_orders">Orders</a>
+            <a class="btn btn-success" href="index.php?route=seller_product">Add product</a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($products as $product): ?>
+                    <tr>
+                        <td><?= e($product['title']) ?></td>
+                        <td><?= e($product['category_name']) ?></td>
+                        <td><?= money($product['price']) ?></td>
+                        <td><?= (int) $product['stock_quantity'] ?></td>
+                        <td><?= $product['is_active'] ? 'Active' : 'Inactive' ?></td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary" href="index.php?route=seller_product&id=<?= (int) $product['id'] ?>">Edit</a>
+                            <form class="d-inline" method="post">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                                <button class="btn btn-sm btn-outline-secondary" name="action" value="toggle">Toggle</button>
+                                <button class="btn btn-sm btn-outline-danger" name="action" value="delete" onclick="return confirm('Delete this listing?')">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if (!$products): ?>
+        <p class="text-muted">No listings yet.</p>
+    <?php endif; ?>
     <?php
     layout_footer();
 }
@@ -608,7 +907,49 @@ function page_seller_product(): void
 
     layout_header($id ? 'Edit product' : 'Add product');
     ?>
-    <div class="card card-body"><h1 class="h4 mb-3"><?= $id ? 'Edit product' : 'Add product' ?></h1><form method="post" enctype="multipart/form-data" class="row g-3"><?= csrf_field() ?><div class="col-md-8"><label class="form-label">Title</label><input class="form-control" name="title" value="<?= e($product['title']) ?>" required></div><div class="col-md-4"><label class="form-label">Category</label><select class="form-select" name="category_id" required><?php foreach (categories() as $cat): ?><option value="<?= (int) $cat['id'] ?>" <?= selected((string) $product['category_id'], (string) $cat['id']) ?>><?= e($cat['name']) ?></option><?php endforeach; ?></select></div><div class="col-md-6"><label class="form-label">Price (ZAR)</label><input class="form-control" type="number" step="0.01" min="0" name="price" value="<?= e((string) $product['price']) ?>" required></div><div class="col-md-6"><label class="form-label">Stock quantity</label><input class="form-control" type="number" min="0" name="stock_quantity" value="<?= (int) $product['stock_quantity'] ?>" required></div><div class="col-12"><label class="form-label">Description</label><textarea class="form-control" name="description" rows="5" required><?= e($product['description']) ?></textarea></div><div class="col-md-8"><label class="form-label">Product image</label><input class="form-control" type="file" name="image" accept="image/jpeg,image/png,image/webp"></div><div class="col-md-4 d-flex align-items-end"><div class="form-check"><input class="form-check-input" type="checkbox" name="is_active" id="active" <?= checked((bool) $product['is_active']) ?>><label class="form-check-label" for="active">Active listing</label></div></div><div class="col-12"><button class="btn btn-success">Save product</button></div></form></div>
+    <div class="card card-body">
+        <h1 class="h4 mb-3"><?= $id ? 'Edit product' : 'Add product' ?></h1>
+        <form method="post" enctype="multipart/form-data" class="row g-3">
+            <?= csrf_field() ?>
+            <div class="col-md-8">
+                <label class="form-label">Title</label>
+                <input class="form-control" name="title" value="<?= e($product['title']) ?>" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Category</label>
+                <select class="form-select" name="category_id" required>
+                    <?php foreach (categories() as $cat): ?>
+                        <option value="<?= (int) $cat['id'] ?>" <?= selected((string) $product['category_id'], (string) $cat['id']) ?>><?= e($cat['name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Price (ZAR)</label>
+                <input class="form-control" type="number" step="0.01" min="0" name="price" value="<?= e((string) $product['price']) ?>" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Stock quantity</label>
+                <input class="form-control" type="number" min="0" name="stock_quantity" value="<?= (int) $product['stock_quantity'] ?>" required>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="description" rows="5" required><?= e($product['description']) ?></textarea>
+            </div>
+            <div class="col-md-8">
+                <label class="form-label">Product image</label>
+                <input class="form-control" type="file" name="image" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="is_active" id="active" <?= checked((bool) $product['is_active']) ?>>
+                    <label class="form-check-label" for="active">Active listing</label>
+                </div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-success">Save product</button>
+            </div>
+        </form>
+    </div>
     <?php
     layout_footer();
 }
@@ -639,7 +980,47 @@ function page_seller_orders(): void
 
     layout_header('Seller orders');
     ?>
-    <h1 class="h4 mb-3">Seller orders</h1><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Order</th><th>Buyer</th><th>Item</th><th>Payment</th><th>Delivery</th><th>Status</th></tr></thead><tbody><?php foreach ($items as $item): ?><tr><td><?= e($item['order_number']) ?></td><td><?= e($item['buyer_name']) ?></td><td><?= e($item['title_snapshot']) ?> x <?= (int) $item['quantity'] ?></td><td><?= e($item['payment_method']) ?></td><td><?= nl2br(e($item['delivery_address'])) ?></td><td><form method="post" class="d-flex gap-2"><?= csrf_field() ?><input type="hidden" name="item_id" value="<?= (int) $item['id'] ?>"><select class="form-select form-select-sm" name="status"><?php foreach (['Pending', 'Processing', 'Completed', 'Cancelled'] as $status): ?><option <?= selected($item['fulfillment_status'], $status) ?>><?= $status ?></option><?php endforeach; ?></select><button class="btn btn-sm btn-success">Save</button></form></td></tr><?php endforeach; ?></tbody></table></div><?php if (!$items): ?><p class="text-muted">No seller orders yet.</p><?php endif; ?>
+    <h1 class="h4 mb-3">Seller orders</h1>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Buyer</th>
+                    <th>Item</th>
+                    <th>Payment</th>
+                    <th>Delivery</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($items as $item): ?>
+                    <tr>
+                        <td><?= e($item['order_number']) ?></td>
+                        <td><?= e($item['buyer_name']) ?></td>
+                        <td><?= e($item['title_snapshot']) ?> x <?= (int) $item['quantity'] ?></td>
+                        <td><?= e($item['payment_method']) ?></td>
+                        <td><?= nl2br(e($item['delivery_address'])) ?></td>
+                        <td>
+                            <form method="post" class="d-flex gap-2">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="item_id" value="<?= (int) $item['id'] ?>">
+                                <select class="form-select form-select-sm" name="status">
+                                    <?php foreach (['Pending', 'Processing', 'Completed', 'Cancelled'] as $status): ?>
+                                        <option <?= selected($item['fulfillment_status'], $status) ?>><?= $status ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <button class="btn btn-sm btn-success">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if (!$items): ?>
+        <p class="text-muted">No seller orders yet.</p>
+    <?php endif; ?>
     <?php
     layout_footer();
 }
@@ -654,9 +1035,25 @@ function page_admin_dashboard(): void
         'Total revenue' => money(db()->query('SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE status <> "Cancelled"')->fetchColumn()),
     ];
     layout_header('Admin dashboard');
-    echo '<h1 class="h4 mb-3">Admin dashboard</h1><div class="row g-3 mb-4">';
-    foreach ($stats as $label => $value) echo '<div class="col-sm-6 col-lg-3"><div class="card card-body"><div class="text-muted">' . e($label) . '</div><div class="fs-4 fw-bold">' . e((string) $value) . '</div></div></div>';
-    echo '</div><div class="d-flex flex-wrap gap-2"><a class="btn btn-success" href="index.php?route=admin_users">Manage users</a><a class="btn btn-success" href="index.php?route=admin_categories">Manage categories</a><a class="btn btn-success" href="index.php?route=admin_products">Moderate products</a><a class="btn btn-success" href="index.php?route=admin_orders">View orders</a></div>';
+    ?>
+    <h1 class="h4 mb-3">Admin dashboard</h1>
+    <div class="row g-3 mb-4">
+        <?php foreach ($stats as $label => $value): ?>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-body">
+                    <div class="text-muted"><?= e($label) ?></div>
+                    <div class="fs-4 fw-bold"><?= e((string) $value) ?></div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-success" href="index.php?route=admin_users">Manage users</a>
+        <a class="btn btn-success" href="index.php?route=admin_categories">Manage categories</a>
+        <a class="btn btn-success" href="index.php?route=admin_products">Moderate products</a>
+        <a class="btn btn-success" href="index.php?route=admin_orders">View orders</a>
+    </div>
+    <?php
     layout_footer();
 }
 
@@ -674,7 +1071,38 @@ function page_admin_users(): void
     $users = db()->query('SELECT * FROM users ORDER BY created_at DESC')->fetchAll();
     layout_header('Manage users');
     ?>
-    <h1 class="h4 mb-3">Manage users</h1><div class="table-responsive"><table class="table align-middle"><tr><th>Name</th><th>Email</th><th>Role</th><th>Province</th><th></th></tr><?php foreach ($users as $user): ?><tr><td><?= e($user['full_name']) ?></td><td><?= e($user['email']) ?></td><td><?= e($user['role']) ?></td><td><?= e($user['province']) ?></td><td><form method="post" class="d-flex gap-2"><?= csrf_field() ?><input type="hidden" name="user_id" value="<?= (int) $user['id'] ?>"><select class="form-select form-select-sm" name="role"><?php foreach (['buyer', 'seller', 'admin'] as $role): ?><option <?= selected($user['role'], $role) ?>><?= $role ?></option><?php endforeach; ?></select><button class="btn btn-sm btn-success" <?= (int) $user['id'] === (int) $admin['id'] ? 'disabled' : '' ?>>Save</button></form></td></tr><?php endforeach; ?></table></div>
+    <h1 class="h4 mb-3">Manage users</h1>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Province</th>
+                <th></th>
+            </tr>
+            <?php foreach ($users as $user): ?>
+                <tr>
+                    <td><?= e($user['full_name']) ?></td>
+                    <td><?= e($user['email']) ?></td>
+                    <td><?= e($user['role']) ?></td>
+                    <td><?= e($user['province']) ?></td>
+                    <td>
+                        <form method="post" class="d-flex gap-2">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="user_id" value="<?= (int) $user['id'] ?>">
+                            <select class="form-select form-select-sm" name="role">
+                                <?php foreach (['buyer', 'seller', 'admin'] as $role): ?>
+                                    <option <?= selected($user['role'], $role) ?>><?= $role ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <button class="btn btn-sm btn-success" <?= (int) $user['id'] === (int) $admin['id'] ? 'disabled' : '' ?>>Save</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
     <?php
     layout_footer();
 }
@@ -690,7 +1118,38 @@ function page_admin_categories(): void
     }
     layout_header('Manage categories');
     ?>
-    <h1 class="h4 mb-3">Manage categories</h1><form method="post" class="card card-body mb-3"><?= csrf_field() ?><input type="hidden" name="action" value="add"><div class="input-group"><input class="form-control" name="name" placeholder="New category"><button class="btn btn-success">Add</button></div></form><div class="table-responsive"><table class="table"><tr><th>Name</th><th>Status</th><th></th></tr><?php foreach (categories(false) as $cat): ?><tr><td><?= e($cat['name']) ?></td><td><?= $cat['is_active'] ? 'Active' : 'Inactive' ?></td><td><form method="post"><?= csrf_field() ?><input type="hidden" name="action" value="toggle"><input type="hidden" name="category_id" value="<?= (int) $cat['id'] ?>"><button class="btn btn-sm btn-outline-secondary">Toggle</button></form></td></tr><?php endforeach; ?></table></div>
+    <h1 class="h4 mb-3">Manage categories</h1>
+    <form method="post" class="card card-body mb-3">
+        <?= csrf_field() ?>
+        <input type="hidden" name="action" value="add">
+        <div class="input-group">
+            <input class="form-control" name="name" placeholder="New category">
+            <button class="btn btn-success">Add</button>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            <?php foreach (categories(false) as $cat): ?>
+                <tr>
+                    <td><?= e($cat['name']) ?></td>
+                    <td><?= $cat['is_active'] ? 'Active' : 'Inactive' ?></td>
+                    <td>
+                        <form method="post">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="action" value="toggle">
+                            <input type="hidden" name="category_id" value="<?= (int) $cat['id'] ?>">
+                            <button class="btn btn-sm btn-outline-secondary">Toggle</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
     <?php
     layout_footer();
 }
@@ -707,7 +1166,36 @@ function page_admin_products(): void
     $products = db()->query('SELECT p.*, u.full_name AS seller_name, c.name AS category_name FROM products p JOIN users u ON u.id = p.seller_id JOIN categories c ON c.id = p.category_id ORDER BY p.created_at DESC')->fetchAll();
     layout_header('Moderate products');
     ?>
-    <h1 class="h4 mb-3">Moderate products</h1><div class="table-responsive"><table class="table align-middle"><tr><th>Product</th><th>Seller</th><th>Category</th><th>Status</th><th>Featured</th><th></th></tr><?php foreach ($products as $product): ?><tr><td><?= e($product['title']) ?></td><td><?= e($product['seller_name']) ?></td><td><?= e($product['category_name']) ?></td><td><?= $product['is_active'] ? 'Active' : 'Inactive' ?></td><td><?= $product['is_featured'] ? 'Yes' : 'No' ?></td><td><form method="post" class="d-flex gap-2"><?= csrf_field() ?><input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>"><button class="btn btn-sm btn-outline-secondary" name="action" value="toggle">Toggle active</button><button class="btn btn-sm btn-outline-success" name="action" value="feature">Feature</button></form></td></tr><?php endforeach; ?></table></div>
+    <h1 class="h4 mb-3">Moderate products</h1>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <tr>
+                <th>Product</th>
+                <th>Seller</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Featured</th>
+                <th></th>
+            </tr>
+            <?php foreach ($products as $product): ?>
+                <tr>
+                    <td><?= e($product['title']) ?></td>
+                    <td><?= e($product['seller_name']) ?></td>
+                    <td><?= e($product['category_name']) ?></td>
+                    <td><?= $product['is_active'] ? 'Active' : 'Inactive' ?></td>
+                    <td><?= $product['is_featured'] ? 'Yes' : 'No' ?></td>
+                    <td>
+                        <form method="post" class="d-flex gap-2">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                            <button class="btn btn-sm btn-outline-secondary" name="action" value="toggle">Toggle active</button>
+                            <button class="btn btn-sm btn-outline-success" name="action" value="feature">Feature</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
     <?php
     layout_footer();
 }
@@ -725,7 +1213,43 @@ function page_admin_orders(): void
     $orders = db()->query('SELECT o.*, u.full_name AS buyer_name FROM orders o JOIN users u ON u.id = o.buyer_id ORDER BY o.created_at DESC')->fetchAll();
     layout_header('All orders');
     ?>
-    <h1 class="h4 mb-3">All orders and transactions</h1><div class="table-responsive"><table class="table align-middle"><tr><th>Order</th><th>Buyer</th><th>Payment</th><th>Total</th><th>Status</th><th></th></tr><?php foreach ($orders as $order): ?><tr><td><?= e($order['order_number']) ?></td><td><?= e($order['buyer_name']) ?></td><td><?= e($order['payment_method']) ?></td><td><?= money($order['total_amount']) ?></td><td><?= e($order['status']) ?></td><td><form method="post" class="d-flex gap-2"><?= csrf_field() ?><input type="hidden" name="order_id" value="<?= (int) $order['id'] ?>"><select class="form-select form-select-sm" name="status"><?php foreach (['Pending', 'Processing', 'Completed', 'Cancelled'] as $status): ?><option <?= selected($order['status'], $status) ?>><?= $status ?></option><?php endforeach; ?></select><button class="btn btn-sm btn-success">Save</button></form></td></tr><?php endforeach; ?></table></div><?php if (!$orders): ?><p class="text-muted">No orders yet.</p><?php endif; ?>
+    <h1 class="h4 mb-3">All orders and transactions</h1>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <tr>
+                <th>Order</th>
+                <th>Buyer</th>
+                <th>Payment</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+            <?php foreach ($orders as $order): ?>
+                <tr>
+                    <td><?= e($order['order_number']) ?></td>
+                    <td><?= e($order['buyer_name']) ?></td>
+                    <td><?= e($order['payment_method']) ?></td>
+                    <td><?= money($order['total_amount']) ?></td>
+                    <td><?= e($order['status']) ?></td>
+                    <td>
+                        <form method="post" class="d-flex gap-2">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="order_id" value="<?= (int) $order['id'] ?>">
+                            <select class="form-select form-select-sm" name="status">
+                                <?php foreach (['Pending', 'Processing', 'Completed', 'Cancelled'] as $status): ?>
+                                    <option <?= selected($order['status'], $status) ?>><?= $status ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <button class="btn btn-sm btn-success">Save</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    <?php if (!$orders): ?>
+        <p class="text-muted">No orders yet.</p>
+    <?php endif; ?>
     <?php
     layout_footer();
 }
