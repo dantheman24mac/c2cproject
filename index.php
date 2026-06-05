@@ -94,6 +94,7 @@ function layout_footer(): void
     ?>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/app.js"></script>
     </body>
     </html>
     <?php
@@ -540,7 +541,8 @@ function page_product(): void
                             <?php endfor; ?>
                         </select>
                         <label class="form-label">Review</label>
-                        <textarea class="form-control mb-3" name="review_text" required></textarea>
+                        <textarea class="form-control mb-1" name="review_text" required></textarea>
+                        <div class="text-muted small mb-3" data-word-count-for="review_text">0 words</div>
                         <button class="btn btn-success">Submit review</button>
                     </form>
                 <?php else: ?>
@@ -933,7 +935,8 @@ function page_seller_product(): void
             </div>
             <div class="col-12">
                 <label class="form-label">Description</label>
-                <textarea class="form-control" name="description" rows="5" required><?= e($product['description']) ?></textarea>
+                <textarea class="form-control mb-1" name="description" rows="5" required><?= e($product['description']) ?></textarea>
+                <div class="text-muted small" data-word-count-for="description">0 words</div>
             </div>
             <div class="col-md-8">
                 <label class="form-label">Product image</label>
