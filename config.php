@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 session_start();
 
-const DB_HOST = '127.0.0.1';
+const DB_HOST = 'db';
 const DB_NAME = 'c2c_marketplace';
-const DB_USER = 'root';
-const DB_PASS = '';
+const DB_USER = 'c2c_user';
+const DB_PASS = 'my_secure_password';
 
 const APP_NAME = 'C2C Marketplace';
 const ADMIN_EMAIL = 'admin@c2c.local';

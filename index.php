@@ -255,15 +255,25 @@ function page_register(): void
 {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $role = $_POST['role'] === 'seller' ? 'seller' : 'buyer';
-        $stmt = db()->prepare('INSERT INTO users (full_name, email, password_hash, role, province) VALUES (?, ?, ?, ?, ?)');
-        try {
-
-            $stmt->execute([trim($_POST['full_name']), strtolower(trim($_POST['email'])), password_hash($_POST['password'], PASSWORD_BCRYPT), $role, $_POST['province'] ?: null]);
-            flash('Registration successful. Please log in.');
-            redirect('index.php?route=login');
-        } catch (PDOException) {
-            flash('Email address is already registered.');
+        $fullName = trim($_POST['full_name'] ?? '');
+        $email = strtolower(trim($_POST['email'] ?? ''));
+        $password = $_POST['password'] ?? '';
+        $role = ($_POST['role'] ?? '') === 'seller' ? 'seller' : 'buyer';
+        $province = $_POST['province'] ?? null;
+        
+        if (empty($fullName) || empty($email) || empty($password)) {
+            flash('Please fill in all required fields.');
+        } elseif (strlen($password) < 8) {
+            flash('Password must be at least 8 characters long.');
+        } else {
+            $stmt = db()->prepare('INSERT INTO users (full_name, email, password_hash, role, province) VALUES (?, ?, ?, ?, ?)');
+            try {
+                $stmt->execute([$fullName, $email, password_hash($password, PASSWORD_BCRYPT), $role, $province ?: null]);
+                flash('Registration successful. Please log in.');
+                redirect('index.php?route=login');
+            } catch (PDOException) {
+                flash('Email address is already registered or invalid.');
+            }
         }
     }
 
@@ -307,18 +317,23 @@ function page_login(): void
 {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $email = strtolower(trim($_POST['email'] ?? ''));
+        $password = $_POST['password'] ?? '';
 
-        $stmt = db()->prepare('SELECT * FROM users WHERE email = ?');
-        $stmt->execute([strtolower(trim($_POST['email']))]);
-        $user = $stmt->fetch();
-        if ($user && password_verify($_POST['password'], $user['password_hash'])) {
-            $_SESSION['user_id'] = (int) $user['id'];
-            flash('Welcome back.');
-            redirect('index.php');
+        if (empty($email) || empty($password)) {
+            flash('Please enter both email and password.');
+        } else {
+            $stmt = db()->prepare('SELECT * FROM users WHERE email = ?');
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+            if ($user && password_verify($password, $user['password_hash'])) {
+                $_SESSION['user_id'] = (int) $user['id'];
+                flash('Welcome back.');
+                redirect('index.php');
+            } else {
+                flash('Invalid email or password.');
+            }
         }
-
-        flash('Invalid email or password.');
-
     }
 
     layout_header('Login');
@@ -896,15 +911,26 @@ function page_seller_product(): void
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $image = upload_image($product['image_path'] ?? null);
-        if ($id) {
-            db()->prepare('UPDATE products SET category_id = ?, title = ?, description = ?, price = ?, stock_quantity = ?, image_path = ?, is_active = ? WHERE id = ?')->execute([(int) $_POST['category_id'], trim($_POST['title']), trim($_POST['description']), (float) $_POST['price'], (int) $_POST['stock_quantity'], $image, isset($_POST['is_active']) ? 1 : 0, $id]);
-            flash('Product updated.');
+        $categoryId = (int) ($_POST['category_id'] ?? 0);
+        $title = trim($_POST['title'] ?? '');
+        $description = trim($_POST['description'] ?? '');
+        $price = (float) ($_POST['price'] ?? 0);
+        $stock = (int) ($_POST['stock_quantity'] ?? 0);
+        $isActive = isset($_POST['is_active']) ? 1 : 0;
+        
+        if (empty($title) || empty($categoryId) || $price < 0 || $stock < 0) {
+            flash('Please fill in all required fields correctly (Title, Category, Price >= 0, Stock >= 0).');
         } else {
-            db()->prepare('INSERT INTO products (seller_id, category_id, title, description, price, stock_quantity, image_path, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')->execute([$user['id'], (int) $_POST['category_id'], trim($_POST['title']), trim($_POST['description']), (float) $_POST['price'], (int) $_POST['stock_quantity'], $image, isset($_POST['is_active']) ? 1 : 0]);
-            flash('Product created.');
+            $image = upload_image($product['image_path'] ?? null);
+            if ($id) {
+                db()->prepare('UPDATE products SET category_id = ?, title = ?, description = ?, price = ?, stock_quantity = ?, image_path = ?, is_active = ? WHERE id = ?')->execute([$categoryId, $title, $description, $price, $stock, $image, $isActive, $id]);
+                flash('Product updated.');
+            } else {
+                db()->prepare('INSERT INTO products (seller_id, category_id, title, description, price, stock_quantity, image_path, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')->execute([$user['id'], $categoryId, $title, $description, $price, $stock, $image, $isActive]);
+                flash('Product created.');
+            }
+            redirect('index.php?route=seller');
         }
-        redirect('index.php?route=seller');
     }
 
     layout_header($id ? 'Edit product' : 'Add product');

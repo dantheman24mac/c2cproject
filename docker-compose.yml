@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: my_secure_root_password
+      MARIADB_DATABASE: c2c_marketplace
+      MARIADB_USER: c2c_user
+      MARIADB_PASSWORD: my_secure_password
+    volumes:
+      # This persists your database data even if the container is destroyed
+      - db_data:/var/lib/mysql
+      # Docker MariaDB images automatically run SQL scripts in this folder on first boot
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+
+volumes:
+  db_data:
